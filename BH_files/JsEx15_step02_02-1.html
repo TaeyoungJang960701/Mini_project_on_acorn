@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+</head>
+<body>
+    <section style="background-color: #eee;">
+  <div class="container py-5">
+    <div class="row">
+      <div class="col">
+        <nav aria-label="breadcrumb" class="bg-body-tertiary rounded-3 p-3 mb-4">
+          <ol class="breadcrumb mb-0">
+            <li class="breadcrumb-item"><a href="../outline.html">Home</a></li>            
+            <li class="breadcrumb-item active" aria-current="page">User Profile</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-4">
+        <div class="card mb-4">
+          <div class="card-body text-center">
+            <img src="https://wrtn-image-user-upload.s3.ap-northeast-2.amazonaws.com/blog/6492401f0519cbfb1f5b18d9/6492de5c-99da-4c18-8e7e-e13120e7682d" alt="avatar"
+              class="rounded-circle img-fluid" style="width: 150px;">
+            <div class="d-flex justify-content-center mb-2">
+              <button  type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-primary ms-1" onclick="editRow(this)">편집</button>
+              <button  type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-primary ms-1">Message</button>
+            </div>
+          </div>
+        </div>
+      <div class="col-12 col-sm-9">
+        <div class="card mb-4">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-sm-3">
+                <p class="mb-0">Name</p>
+              </div>
+              <div class="col-sm-9">
+                <p class="text-muted mb-0" id="fullName">전범하</p>
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-sm-3">
+                <p class="mb-0">Email</p>
+              </div>
+              <div class="col-sm-9">
+                <p class="text-muted mb-0" id="Email">jyy01903@naver.com</p>
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-sm-3">
+                <p class="mb-0">Phone</p>
+              </div>
+              <div class="col-sm-9">
+                <p class="text-muted mb-0" id="Phone">(+82) 010-3229-1614</p>
+              </div>
+            </div>
+            <hr>            
+            <div class="row">
+              <div class="col-sm-3">
+                <p class="mb-0">Address</p>
+              </div>
+              <div class="col-sm-9">
+                <p class="text-muted mb-0" id="Address">충청남도 아산시</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<script>
+  let isEditing = false;
+
+  function editRow(btn) {
+    const nameEl = document.getElementById('fullName');
+    const emailEl = document.getElementById('Email');
+    const phoneEl = document.getElementById('Phone');
+    const addressEl = document.getElementById('Address');
+
+    if (!isEditing) {
+      // 기존 텍스트 저장
+      const currentName = nameEl.textContent;
+      const currentEmail = emailEl.textContent;
+      const currentPhone = phoneEl.textContent;
+      const currentAddress = addressEl.textContent;
+
+      // 입력 필드로 전환
+      nameEl.innerHTML = `<input type="text" id="nameInput" class="form-control" value="${currentName}">`;
+      emailEl.innerHTML = `<input type="email" id="emailInput" class="form-control" value="${currentEmail}">`;
+      phoneEl.innerHTML = `<input type="text" id="phoneInput" class="form-control" value="${currentPhone}">`;
+      addressEl.innerHTML = `<input type="text" id="addressInput" class="form-control" value="${currentAddress}">`;
+
+      btn.textContent = '저장';
+      isEditing = true;
+    } else {
+      // 입력값 저장
+      const updatedName = document.getElementById('nameInput').value;
+      const updatedEmail = document.getElementById('emailInput').value;
+      const updatedPhone = document.getElementById('phoneInput').value;
+      const updatedAddress = document.getElementById('addressInput').value;
+
+      // 텍스트로 되돌리기
+      nameEl.textContent = updatedName;
+      emailEl.textContent = updatedEmail;
+      phoneEl.textContent = updatedPhone;
+      addressEl.textContent = updatedAddress;
+
+      btn.textContent = '편집';
+      isEditing = false;
+    }
+  }
+</script>
+</body>
+</html>
