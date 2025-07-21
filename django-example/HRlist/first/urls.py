@@ -7,5 +7,8 @@ urlpatterns = [
 	path('signup/', views.SignupView , name='signup'),
     path('members/', views.MembersView, name='members'),
     path('members/<int:user_id>/', views.MembersDetailView, name='member_detail'),
-    path('members/me', views.MeView, name='mypage'),
+    path('members/me', views.MeView, name='me_detail'),
+    path('logout/', views.LogoutView, name='logout'),
+    path('me/edit/', views.me_edit_ajax, name='me_edit_ajax'),
+    # path('mebers/me/edit/', views.MeEditView, name='me_edit'),
 ]

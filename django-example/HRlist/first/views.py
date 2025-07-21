@@ -1,6 +1,12 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.hashers import make_password, check_password
 from .models import User
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
+import json
+
+
 
 # Create your views here.
 
@@ -32,7 +38,9 @@ def LoginView(request):
             res_data['error'] = "해당 이메일의 사용자가 없습니다."
             return render(request, 'login.html', res_data)
 
-
+def LogoutView(request):
+    request.session.flush()
+    return redirect('login.html')
 
 def SignupView(request):
     if request.method =='GET':
@@ -92,5 +100,39 @@ def MeView(request):
     my_user = User.objects.get(id=user_id)
     
     return render(request, 'medetail.html', {'user': my_user})
-   
-    
+
+@csrf_exempt
+@login_required
+def me_edit_ajax(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+
+            user_id = request.session.get('user_id')
+            user = User.objects.get(id=user_id)
+
+            user.user_name = data.get('user_name', user.user_name)
+            user.user_email = data.get('user_email', user.user_email)
+            user.user_phone = data.get('user_phone', user.user_phone)
+            user.user_address = data.get('user_address', user.user_address)
+            user.save()
+
+            return JsonResponse({'status': 'success'})
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)})
+    return JsonResponse({'status': 'invalid_method'})
+
+# @login_required  
+# def MeEditView(request):
+#     user_id = request.session.get('user')
+#     user = get_object_or_404(User, id=user_id)
+
+#     if request.method == 'POST':
+#         user.user_name = request.POST.get('user_name')
+#         user.user_email = request.POST.get('user_email')
+#         user.user_phone = request.POST.get('user_phone')
+#         user.user_address = request.POST.get('user_address')
+#         user.save()
+#         return redirect('me_detail')
+
+#     return render(request, 'medetail.html', {'user': user})       
