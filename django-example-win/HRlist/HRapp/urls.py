@@ -8,8 +8,6 @@ urlpatterns = [
     path('members/', views.MembersView, name='members'),
     path('members/<int:user_id>/', views.MembersDetailView, name='member_detail'),
     path('members/me', views.MeView, name='me_detail'),
-<<<<<<< HEAD
     path('logout/', views.LogoutView, name='logout'),
-=======
->>>>>>> origin
+    path('members/me/edit/', views.MeEditView, name='me_edit'),
 ]

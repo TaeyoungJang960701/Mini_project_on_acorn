@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.hashers import make_password, check_password
 from .models import User
-
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 
 
 def HomeView(request):
@@ -32,13 +33,9 @@ def LoginView(request):
             res_data['error'] = "해당 이메일의 사용자가 없습니다."
             return render(request, 'login.html', res_data)
 
-<<<<<<< HEAD
 def LogoutView(request):
     request.session.flush()
     return redirect('login.html')
-=======
-
->>>>>>> origin
 
 def SignupView(request):
     if request.method =='GET':
@@ -98,21 +95,25 @@ def MeView(request):
     my_user = User.objects.get(id=user_id)
     
     return render(request, 'medetail.html', {'user': my_user})
-   
-<<<<<<< HEAD
-def MeEditView(request):
-    user_id = request.session.get('user')
-    user = get_object_or_404(User, id=user_id)
 
+@csrf_exempt   
+def MeEditView(request):
     if request.method == 'POST':
+        user_id = request.session.get('user')
+        if not user_id:
+            return JsonResponse({'message': 'no session'}, status=401)
+
+        try:
+            user = User.objects.get(id=user_id)
+        except User.DoesNotExist:
+            return JsonResponse({'message': 'user not found'}, status=404)
+
         user.user_name = request.POST.get('user_name')
         user.user_email = request.POST.get('user_email')
         user.user_phone = request.POST.get('user_phone')
         user.user_address = request.POST.get('user_address')
         user.save()
-        return redirect('me_detail')
 
-    return render(request, 'medetail.html', {'user': user})   
-=======
+        return JsonResponse({'message': 'success'})
     
->>>>>>> origin
+    return JsonResponse({'message': 'invalid request'}, status=400)
