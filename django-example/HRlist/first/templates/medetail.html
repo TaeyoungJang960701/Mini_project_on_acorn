@@ -7,115 +7,132 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
+    <style>
+    .profile-image {
+      width: 150px;
+      height: 150px;
+      object-fit: cover;
+    }
+    </style>
 </head>
 <body>
-    <section style="background-color: #eee;">
-  <div class="container py-5">
-    <div class="row">
-      <div class="col">
-        <nav aria-label="breadcrumb" class="bg-body-tertiary rounded-3 p-3 mb-4">
-          <ol class="breadcrumb mb-0">
-            <li class="breadcrumb-item"><a href="{% url 'members' %}">뒤로가기</a></li>            
-            <li class="breadcrumb-item active" aria-current="page">{{ user.user_name }}</li>
-          </ol>
-        </nav>
+<section style="background-color: #eee;">
+    <div class="container py-4">
+      
+      <!-- Breadcrumb -->
+      <div class="row justify-content-center">
+        <div class="col-md-6">
+          <nav class="bg-light rounded-3 p-3 mb-4">
+            <ol class="breadcrumb mb-0">
+              <li class="breadcrumb-item"><a href="{% url 'members' %}">뒤로가기</a></li>
+              <li class="breadcrumb-item active" aria-current="page">{{ user.user_name }}</li>
+            </ol>
+          </nav>
+        </div>
       </div>
-    </div>
 
-    <div class="row">
-      <div class="col-lg-4">
-        <div class="card mb-4">
-          <div class="card-body text-center">
-            <img src="https://wrtn-image-user-upload.s3.ap-northeast-2.amazonaws.com/blog/6492401f0519cbfb1f5b18d9/6492de5c-99da-4c18-8e7e-e13120e7682d" alt="avatar"
-              class="rounded-circle img-fluid" style="width: 150px;">
-            <div class="d-flex justify-content-center mb-2">
-              <button  type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-primary ms-1" onclick="editRow(this)">편집</button>
-            </div>
-          </div>
-        </div>
-      <div class="col-12 col-sm-9">
-        <div class="card mb-4">
-          <div class="card-body">
-            <div class="row">
-              <div class="col-sm-3">
-                <p class="mb-0">Name</p>
-              </div>
-              <div class="col-sm-9">
-                <p class="text-muted mb-0" id="user_name">{{ user.user_name }}</p>
+      <!-- Profile Section -->
+      <div class="row justify-content-center">
+        <div class="col-md-6">
+          <!-- Profile Image Card -->
+          <div class="card mb-4 text-center">
+            <div class="card-body">
+              <img src="https://wrtn-image-user-upload.s3.ap-northeast-2.amazonaws.com/blog/6492401f0519cbfb1f5b18d9/6492de5c-99da-4c18-8e7e-e13120e7682d"
+                   alt="avatar" class="rounded-circle profile-image mb-3">
+              <div class="d-flex justify-content-center">
+                <button type="button" class="btn btn-outline-primary" onclick="editRow(this)">편집</button>
               </div>
             </div>
-            <hr>
-            <div class="row">
-              <div class="col-sm-3">
-                <p class="mb-0">Email</p>
+          </div>          
+        <form id="editForm" method="post" action="{% url 'me_detail' %}">
+          {% csrf_token %}
+          
+          <!-- Profile Info Card -->
+          <div class="card">
+            <div class="card-body">
+              <div class="row mb-3">
+                <div class="col-sm-3"><strong>Name</strong></div>
+                <div class="col-sm-9 text-muted" id="user_name">{{ user.user_name }}</div>
               </div>
-              <div class="col-sm-9">
-                <p class="text-muted mb-0" id="user_email">{{ user.user_email }}</p>
+              <div class="row mb-3">
+                <div class="col-sm-3"><strong>Email</strong></div>
+                <div class="col-sm-9 text-muted" id="user_email">{{ user.user_email }}</div>
               </div>
-            </div>
-            <hr>
-            <div class="row">
-              <div class="col-sm-3">
-                <p class="mb-0">Phone</p>
+              <div class="row mb-3">
+                <div class="col-sm-3"><strong>Phone</strong></div>
+                <div class="col-sm-9 text-muted" id="user_phone">{{ user.user_phone }}</div>
               </div>
-              <div class="col-sm-9">
-                <p class="text-muted mb-0" id="user_phone">{{ user.user_phone }}</p>
-              </div>
-            </div>
-            <hr>            
-            <div class="row">
-              <div class="col-sm-3">
-                <p class="mb-0">Address</p>
-              </div>
-              <div class="col-sm-9">
-                <p class="text-muted mb-0" id="user_address">{{ user.user_address }}</p>
+              <div class="row">
+                <div class="col-sm-3"><strong>Address</strong></div>
+                <div class="col-sm-9 text-muted" id="user_address">{{ user.user_address }}</div>
               </div>
             </div>
           </div>
-        </div>
+        </form> 
       </div>
     </div>
   </div>
 </section>
+
 <script>
   let isEditing = false;
 
   function editRow(btn) {
-    const nameEl = document.getElementById('fullName');
-    const emailEl = document.getElementById('Email');
-    const phoneEl = document.getElementById('Phone');
-    const addressEl = document.getElementById('Address');
+    const userName = document.getElementById('user_name');
+    const userEmail = document.getElementById('user_email');
+    const userPhone = document.getElementById('user_phone');
+    const userAddress = document.getElementById('user_address');
 
     if (!isEditing) {
-      // 기존 텍스트 저장
-      const currentName = nameEl.textContent;
-      const currentEmail = emailEl.textContent;
-      const currentPhone = phoneEl.textContent;
-      const currentAddress = addressEl.textContent;
+      const currentName = userName.textContent.trim();
+      const currentEmail = userEmail.textContent.trim();
+      const currentPhone = userPhone.textContent.trim();
+      const currentAddress = userAddress.textContent.trim();
+      
+      userName.innerHTML = `<input name="user_name" type="text" id="user_name" class="form-control" value="${currentName}">`;
+      userEmail.innerHTML = `<input name="user_email" type="email" id="user_email" class="form-control" value="${currentEmail}">`;
+      userPhone.innerHTML = `<input name="user_phone" type="text" id="user_phone" class="form-control" value="${currentPhone}">`;
+      userAddress.innerHTML = `<input name="user_address" type="text" id="user_address" class="form-control" value="${currentAddress}">`;
 
-      // 입력 필드로 전환
-      nameEl.innerHTML = `<input type="text" id="nameInput" class="form-control" value="${currentName}">`;
-      emailEl.innerHTML = `<input type="email" id="emailInput" class="form-control" value="${currentEmail}">`;
-      phoneEl.innerHTML = `<input type="text" id="phoneInput" class="form-control" value="${currentPhone}">`;
-      addressEl.innerHTML = `<input type="text" id="addressInput" class="form-control" value="${currentAddress}">`;
+      btn.textContent = '저장';
 
       btn.textContent = '저장';
       isEditing = true;
     } else {
-      // 입력값 저장
-      const updatedName = document.getElementById('nameInput').value;
-      const updatedEmail = document.getElementById('emailInput').value;
-      const updatedPhone = document.getElementById('phoneInput').value;
-      const updatedAddress = document.getElementById('addressInput').value;
+      // 값 가져오기
+      const updatedName = document.getElementById('user_name').value;
+      const updatedEmail = document.getElementById('user_email').value;
+      const updatedPhone = document.getElementById('user_phone').value;
+      const updatedAddress = document.getElementById('user_address').value;
 
-      // 텍스트로 되돌리기
-      nameEl.textContent = updatedName;
-      emailEl.textContent = updatedEmail;
-      phoneEl.textContent = updatedPhone;
-      addressEl.textContent = updatedAddress;
+      // Ajax로 서버에 전송
+      fetch("{% url 'me_edit_ajax' %}", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': '{{ csrf_token }}'  // csrf_exempt 안쓰는 경우엔 필요
+        },
+        body: JSON.stringify({
+          user_name: updatedName,
+          user_email: updatedEmail,
+          user_phone: updatedPhone,
+          user_address: updatedAddress
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.status === 'success') {
+          userName.textContent = updatedName;
+          userEmail.textContent = updatedEmail;
+          userPhone.textContent = updatedPhone;
+          userAddress.textContent = updatedAddress;
 
-      btn.textContent = '편집';
-      isEditing = false;
+          btn.textContent = '편집';
+          isEditing = false;
+        } else {
+          alert('수정 실패: ' + data.message);
+        }
+      });
     }
   }
 </script>
