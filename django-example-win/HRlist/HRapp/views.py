@@ -3,7 +3,7 @@ from django.contrib.auth.hashers import make_password, check_password
 from .models import User
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-
+from datetime import date
 
 def HomeView(request):
     return render(request, 'home.html')
@@ -83,8 +83,22 @@ def SignupView(request):
 def MembersView(request):
     users = User.objects.all()
     if not users:
-        return render(request, 'members.html', {'error': '등록된 회원이 없습니다.'})  
-    return render(request, 'members.html', {'users': users})
+        return render(request, 'members.html', {'error': '등록된 회원이 없습니다.'}) 
+
+    today = date.today()
+    user_data = []
+    
+    for user in users:
+        birthdate = user.user_birthdate
+        age = today.year - birthdate.year - ((today.month, today.day) < (birthdate.month, birthdate.day))
+        user_data.append({
+            'id': user.id,
+            'name': user.user_name,
+            'email': user.user_email,
+            'age': age,
+        })
+
+    return render(request, 'members.html', {'users': user_data})
 
 def MembersDetailView(request, user_id):
     user = get_object_or_404(User, id=user_id) 
@@ -92,8 +106,8 @@ def MembersDetailView(request, user_id):
 
 def MeView(request):
     user_id = request.session.get('user')
-    my_user = User.objects.get(id=user_id)
-    
+    my_user = User.objects.get(id=user_id)    
+
     return render(request, 'medetail.html', {'user': my_user})
 
 @csrf_exempt   
