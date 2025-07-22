@@ -32,9 +32,13 @@ def LoginView(request):
             res_data['error'] = "해당 이메일의 사용자가 없습니다."
             return render(request, 'login.html', res_data)
 
+<<<<<<< HEAD
 def LogoutView(request):
     request.session.flush()
     return redirect('login.html')
+=======
+
+>>>>>>> origin
 
 def SignupView(request):
     if request.method =='GET':
@@ -95,6 +99,7 @@ def MeView(request):
     
     return render(request, 'medetail.html', {'user': my_user})
    
+<<<<<<< HEAD
 def MeEditView(request):
     user_id = request.session.get('user')
     user = get_object_or_404(User, id=user_id)
@@ -108,3 +113,6 @@ def MeEditView(request):
         return redirect('me_detail')
 
     return render(request, 'medetail.html', {'user': user})   
+=======
+    
+>>>>>>> origin
