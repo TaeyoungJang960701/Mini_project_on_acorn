@@ -48,9 +48,9 @@
   const users = [
     {% for user in users %}
     {
-      name: "{{ user.user_name }}",
-      birth: "{{ user.user_birthdate|date:'Y' }}년생",
-      email: "{{ user.user_email }}",
+      name: "{{ user.name }}",
+      birth: "{{ user.age }}세",
+      email: "{{ user.email }}",
       detailUrl: "{% url 'member_detail' user.id %}"
     },
     {% endfor %}
